@@ -15,8 +15,9 @@ namespace ariel{
             std::string name;
             std::vector<Node*> subs;
             int size;
-            Node(std::string name): name(name), size(0){}
+            Node(std::string name): name(name), size(name.length()){}
         };
+    private:
         Node* root = nullptr;
 
     public:
@@ -38,8 +39,8 @@ namespace ariel{
                     }
                     return false;
                 }
-                int* operator->(){
-                    return &(this->_ptr->size);
+                std::string* operator->(){
+                    return &(this->_ptr->name);
                 }
                 Node* get_ptr(){
                     return this->_ptr;
@@ -261,5 +262,8 @@ namespace ariel{
             }
             return ans;
         }
+
+        friend std::ostream& operator<<(std::ostream& os, OrgChart& org);
+        static std::string& helper(std::string& str, std::string prefix, OrgChart::Node* node);
     };
 };
