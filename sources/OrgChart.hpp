@@ -14,8 +14,7 @@ namespace ariel{
         struct Node{
             std::string name;
             std::vector<Node*> subs;
-            int size;
-            Node(std::string name): name(name), size(name.length()){}
+            Node(const std::string& name): name(name){}
         };
     private:
         Node* root = nullptr;
@@ -24,25 +23,76 @@ namespace ariel{
         OrgChart(){
             this->root = nullptr;
         }
-        ~OrgChart(){}
+
+//        OrgChart(OrgChart& org){
+//            deleteOrg();
+//            copy(org);
+//        }
+
+//        OrgChart(OrgChart&& org) noexcept{
+//            this->root = org.root;
+//            org.root = nullptr;
+//        }
+
+//        ~OrgChart(){
+//            deleteOrg();
+//        }
+
+//        void deleteOrg(){
+//            if(this->root != nullptr){
+//                for(Iterator_Level_Order itr = this->begin_level_order(); itr != OrgChart::end_level_order(); ++itr){
+//                    Node* tmp = itr.get_ptr();
+//                    delete tmp;
+//                }
+//            }
+//        }
+
+//        OrgChart& operator=(const OrgChart& org){
+//            if(this != &org){
+//                deleteOrg();
+//                copy(org);
+//            }
+//            return *this;
+//        }
+
+//        OrgChart& operator=(OrgChart&& org)noexcept{
+//            this->root = org.root;
+//            org.root = nullptr;
+//            return *this;
+//        }
+//
+//        void copy(const OrgChart& org){
+//            if(org.root != nullptr){
+//                this->root = new Node(org.root->name);
+//                copy_helper(this->root, org.root);
+//            }
+//        }
+//
+//        void copy_helper(Node* curr, Node* from){
+//            for(uint i = 0; i < from->subs.size(); ++i){
+//                Node* new_node = new Node(from->subs[i]->name);
+//                curr->subs.push_back(new_node);
+//                copy_helper(curr->subs[i], from->subs[i]);
+//            }
+//        }
 
         class Iterator{
-            protected:
-                Node *_ptr;
             public:
-                std::string &operator*(){
+                Node* _ptr;
+                std::string&  operator*() const{
                     return this->_ptr->name;
                 }
                 bool operator!=(const Iterator& itr) const {
+                    bool ans = false;
                     if(this->_ptr != itr._ptr){
-                        return true;
+                        ans = true;
                     }
-                    return false;
+                    return ans;
                 }
-                std::string* operator->(){
+                std::string* operator->() const {
                     return &(this->_ptr->name);
                 }
-                Node* get_ptr(){
+                Node* get_ptr() const {
                     return this->_ptr;
                 }
         };
@@ -50,47 +100,109 @@ namespace ariel{
         /* level order iterator */
         class Iterator_Level_Order : public Iterator{
             private:
+                std::queue<Node*> q_tmp;
                 std::queue<Node*> q;
             public:
-                Iterator_Level_Order(Node* ptr){
-                    if(ptr == nullptr){
-                        this->_ptr = ptr;
-                    }else{
-                        this->q.push(ptr);
-                        this->_ptr = ptr;
+//                Iterator_Level_Order(Node* ptr): Iterator(){
+//                    if(!this->q.empty()){
+//                        while(!this->q.empty()){
+//                            this->q.pop();
+//                        }
+//                    }
+//                    if(ptr == nullptr){
+//                        this->_ptr = ptr;
+//                    }else{
+//                        this->q.push(ptr);
+//                        this->_ptr = ptr;
+//                    }
+//                }
+//                Iterator_Level_Order& operator++(){
+//                    if(this->q.empty()){
+//                        this->_ptr = nullptr;
+//                    }else{
+//                        Node* tmp = this->q.front();
+//                        this->q.pop();
+//                        if(!tmp->subs.empty()){
+//                            for(int i = 0; i < tmp->subs.size(); ++i){
+//                                this->q.push(tmp->subs[(uint)i]);
+////                                std::cout << "the childs are " << tmp->subs[(uint)i]->name;
+//                            }
+////                            std::cout << "\n";
+//                        }
+//
+//                        this->_ptr = this->q.front();
+////                        std::cout << "now ptr is " << this->_ptr->name << std::endl;
+//                    }
+//                    return *this;
+//                }
+//                Iterator_Level_Order operator++(int){
+//                    Iterator_Level_Order itr = *this;
+//                    if(this->q.empty()){
+//                        this->_ptr = nullptr;
+//                    }else{
+//                        Node* tmp = this->q.front();
+//                        this->q.pop();
+//                        if(!tmp->subs.empty()){
+//                            for(int i = 0; i < tmp->subs.size(); ++i){
+//                                this->q.push(tmp->subs[(uint)i]);
+////                                std::cout << "the childs are " << tmp->subs[(uint)i]->name;
+//                            }
+////                            std::cout << "\n";
+//                        }
+//                        this->_ptr = this->q.front();
+//                    }
+//                    return itr;
+//                }
+
+
+            Iterator_Level_Order(Node* ptr): Iterator(){
+                if(!this->q_tmp.empty()){
+                    while(!this->q_tmp.empty()){
+                        this->q_tmp.pop();
                     }
                 }
-                Iterator_Level_Order& operator++(){
+                if(ptr == nullptr){
+                    this->_ptr = ptr;
+                }else{
+                    this->q_tmp.push(ptr);
+                    while(!this->q_tmp.empty()){
+                        Node* tmp = this->q_tmp.front();
+                        this->q.push(tmp);
+                        this->q_tmp.pop();
+                        for(int i = 0; i < tmp->subs.size(); ++i){
+                            this->q_tmp.push(tmp->subs[(uint)i]);
+                        }
+                    }
+                    this->_ptr = this->q.front();
+                }
+            }
+            Iterator_Level_Order& operator++(){
+                if(this->q.empty()){
+                    this->_ptr = nullptr;
+                }else{
+                    this->q.pop();
                     if(this->q.empty()){
                         this->_ptr = nullptr;
                     }else{
-                        Node* tmp = this->q.front();
-                        this->q.pop();
-                        if(tmp->subs.size() != 0){
-                            for(int i = 0; i < tmp->subs.size(); ++i){
-                                this->q.push(tmp->subs[(uint)i]);
-                            }
-                        }
                         this->_ptr = this->q.front();
                     }
-                    return *this;
                 }
-                Iterator_Level_Order operator++(int){
-                    Iterator_Level_Order itr = *this;
+                return *this;
+            }
+            Iterator_Level_Order operator++(int){
+                Iterator_Level_Order itr = *this;
+                if(this->q.empty()){
+                    this->_ptr = nullptr;
+                }else{
+                    this->q.pop();
                     if(this->q.empty()){
                         this->_ptr = nullptr;
                     }else{
-                        Node* tmp = this->q.front();
-                        this->q.pop();
-                        if(tmp->subs.size() != 0){
-                            for(int i = 0; i < tmp->subs.size(); ++i){
-                                this->q.push(tmp->subs[(uint)i]);
-                            }
-                        }
                         this->_ptr = this->q.front();
                     }
-                    return itr;
                 }
+                return itr;
+            }
         };
 
         /* reverse level order iterator */
@@ -99,7 +211,17 @@ namespace ariel{
                 std::queue<Node*> q;
                 std::stack<Node*> stk;
             public:
-                Iterator_Reverse_Level_Order(Node* ptr){
+                Iterator_Reverse_Level_Order(Node* ptr): Iterator(){
+                    if(!this->q.empty()){
+                        while(!this->q.empty()){
+                            this->q.pop();
+                        }
+                    }
+                    if(!this->stk.empty()){
+                        while(!this->stk.empty()){
+                            this->stk.pop();
+                        }
+                    }
                     if(ptr == nullptr){
                         this->_ptr = nullptr;
                     }else{
@@ -108,19 +230,14 @@ namespace ariel{
                             Node* tmp = this->q.front();
                             this->stk.push(q.front());
                             this->q.pop();
-                            if(tmp->subs.size() != 0){
-                                for(int i = tmp->subs.size()-1; i >=0; --i){
+                            if(!tmp->subs.empty()){
+                                for(int i = (int)tmp->subs.size()-1; i >= 0; --i){
                                     this->q.push(tmp->subs[(uint)i]);
                                 }
                             }
                         }
                         this->_ptr = this->stk.top();
                         this->stk.pop();
-//                        std::cout << "eylon" << std::endl;
-//                        while(!this->stk.empty()){
-//                            std::cout << this->stk.top()->name << std::endl;
-//                            this->stk.pop();
-//                        }
                     }
                 }
 
@@ -151,7 +268,12 @@ namespace ariel{
             private :
                 std::stack<Node*> stk;
             public:
-                Iterator_Preorder(Node* ptr){
+                Iterator_Preorder(Node* ptr): Iterator(){
+                    if(!this->stk.empty()){
+                        while(!this->stk.empty()){
+                            this->stk.pop();
+                        }
+                    }
                     if(ptr == nullptr){
                         this->_ptr = ptr;
                     }else{
@@ -165,7 +287,7 @@ namespace ariel{
                     }else{
                         Node* tmp = this->stk.top();
                         this->stk.pop();
-                        for(int i = tmp->subs.size()-1; i>=0; --i){
+                        for(int i = (int)tmp->subs.size()-1; i >= 0; --i){
                             this->stk.push(tmp->subs[(uint)i]);
                         }
                         if(this->stk.empty()){
@@ -183,8 +305,8 @@ namespace ariel{
                     }else{
                         Node* tmp = this->stk.top();
                         this->stk.pop();
-                        for(int i = tmp->subs.size()-1; i>=0; --i){
-                            this->stk.push(tmp->subs[(uint)i]);
+                        for(uint i = tmp->subs.size()-1; i >= 0; --i){
+                            this->stk.push(tmp->subs[i]);
                         }
                         if(this->stk.empty()){
                             this->_ptr = nullptr;
@@ -202,7 +324,7 @@ namespace ariel{
             return Iterator_Level_Order(this->root);
         }
 
-        Iterator_Level_Order end(){
+        static Iterator_Level_Order end(){
             return Iterator_Level_Order(nullptr);
         }
 
@@ -210,7 +332,7 @@ namespace ariel{
         Iterator_Level_Order begin_level_order(){
             return Iterator_Level_Order(this->root);
         }
-        Iterator_Level_Order end_level_order(){
+        static Iterator_Level_Order end_level_order(){
             return Iterator_Level_Order(nullptr);
         }
 
@@ -218,7 +340,7 @@ namespace ariel{
         Iterator_Reverse_Level_Order begin_reverse_order(){
             return Iterator_Reverse_Level_Order(this->root);
         }
-        Iterator_Reverse_Level_Order end_reverse_order(){
+        static Iterator_Reverse_Level_Order end_reverse_order(){
             return Iterator_Reverse_Level_Order(nullptr);
         }
 
@@ -226,41 +348,45 @@ namespace ariel{
         Iterator_Preorder begin_preorder(){
             return Iterator_Preorder(this->root);
         }
-        Iterator_Preorder end_preorder(){
+        static Iterator_Preorder end_preorder(){
             return Iterator_Preorder(nullptr);
         }
 
 
-        OrgChart& add_root(std::string name){
+        OrgChart& add_root(const std::string& name){
             if(this->root != nullptr){
                 this->root->name = name;
             }else{
-                Node* tmp = new Node(name);
-                this->root = tmp;
+                this->root = new Node(name);
             }
             return *this;
         }
-        OrgChart& add_sub(std::string father, std::string name){
+        OrgChart& add_sub(const std::string& father, const std::string& name){
             Node* tmp = find(father);
             if(tmp == nullptr){
                 throw "father dont exist";
             }
             Node* new_member = new Node(name);
             tmp->subs.push_back(new_member);
-            tmp->size++;
             return *this;
+
         }
-        Node* find(std::string name){
-            Node* ans = nullptr;
-            int i = 0;
-            for(Iterator_Level_Order itr = this->begin_level_order(); (itr != this->end_level_order()); ++itr){
-                i++;
-                if((*itr) == name){
-                    ans = itr.get_ptr();
-                    break;
+
+        Node* find(const std::string& name){
+//            Node* ans = nullptr;
+//                for(Iterator_Level_Order itr = this->begin_level_order(); itr != OrgChart::end_level_order(); ++itr){
+//                    if((*itr) == name){
+//                        return itr.get_ptr();
+////                        ans = itr.get_ptr();
+////                        break;
+//                    }
+//                }
+                for(auto itr = this->begin(); itr != OrgChart::end(); ++itr){
+                    if((*itr) == name){
+                        return itr.get_ptr();
+                    }
                 }
-            }
-            return ans;
+            return nullptr;
         }
 
         friend std::ostream& operator<<(std::ostream& os, OrgChart& org);
