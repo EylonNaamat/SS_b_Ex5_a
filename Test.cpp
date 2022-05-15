@@ -137,14 +137,57 @@ TEST_CASE("iterators - good cases"){
     }
 
     // checking if the size is the same
-            CHECK(level_order.size() == reverse_level_order.size());
-            CHECK(level_order.size() == preorder.size());
-            CHECK(reverse_level_order.size() == preorder.size());
+    CHECK(level_order.size() == reverse_level_order.size());
+    CHECK(level_order.size() == preorder.size());
+    CHECK(reverse_level_order.size() == preorder.size());
 
     for(int i = 0; i < level_order.size(); ++i){
-                CHECK(level_order[(uint)i] == preorder[(uint)i]);
-                CHECK(level_order[(uint)i] == reverse_level_order[reverse_level_order.size()-1-(uint)i]);
+        CHECK(level_order[(uint)i] == preorder[(uint)i]);
+        CHECK(level_order[(uint)i] == reverse_level_order[reverse_level_order.size()-1-(uint)i]);
     }
+
+    OrgChart org2;
+    org2.add_root("CEO")
+            .add_sub("CEO", "HEADANDSHOULDERS")
+            .add_sub("CEO", "CTO")
+            .add_sub("CEO", "COO")
+            .add_sub("CTO", "ABC")
+            .add_sub("CTO", "DEF")
+            .add_sub("COO", "GHI")
+            .add_sub("COO", "JKL")
+            .add_sub("ABC", "MNO")
+            .add_sub("ABC", "PQR")
+            .add_sub("DEF", "STU")
+            .add_sub("DEF", "VWX")
+            .add_sub("MNO", "YZ");
+
+
+
+    std::vector<std::string> vec_level{"CEO", "HEADANDSHOULDERS", "CTO", "COO", "ABC", "DEF", "GHI", "JKL", "MNO", "PQR", "STU", "VWX", "YZ"};
+    std::vector<std::string> vec_reverse{"YZ", "MNO", "PQR", "STU", "VWX", "ABC", "DEF", "GHI", "JKL", "HEADANDSHOULDERS", "CTO", "COO", "CEO"};
+    std::vector<std::string> vec_pre{"CEO", "HEADANDSHOULDERS", "CTO", "ABC", "MNO", "YZ", "PQR", "DEF", "STU", "VWX", "COO", "GHI", "JKL"};
+
+    int i = 0;
+    for(auto element : org2){
+        CHECK(element == vec_level[(uint)i]);
+        ++i;
+    }
+    i = 0;
+    for(auto itr = org2.begin_level_order(); itr != OrgChart::end_level_order(); ++itr){
+        CHECK((*itr) == vec_level[(uint)i]);
+        ++i;
+    }
+    i = 0;
+    for(auto itr = org2.begin_reverse_order(); itr != OrgChart::end_reverse_order(); ++itr){
+        CHECK((*itr) == vec_reverse[(uint)i]);
+        ++i;
+    }
+    i = 0;
+    for(auto itr = org2.begin_preorder(); itr != OrgChart::end_preorder(); ++itr){
+        CHECK((*itr) == vec_pre[(uint)i]);
+        ++i;
+    }
+
 
 
 

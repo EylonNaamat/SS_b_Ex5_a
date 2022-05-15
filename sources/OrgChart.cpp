@@ -2,7 +2,6 @@
 // Created by eylon on 5/11/22.
 //
 #include "OrgChart.hpp"
-#include <exception>
 
 namespace ariel{
 
