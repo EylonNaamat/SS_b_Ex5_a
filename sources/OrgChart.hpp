@@ -148,7 +148,6 @@ namespace ariel{
                             }
                         }
                         this->_ptr = this->stk.top();
-                        this->stk.pop();
                     }
                 }
 

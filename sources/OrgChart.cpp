@@ -58,8 +58,12 @@ namespace ariel{
         if(this->stk.empty()){
             this->_ptr = nullptr;
         }else{
-            this->_ptr = this->stk.top();
             this->stk.pop();
+            if(this->stk.empty()){
+                this->_ptr = nullptr;
+            }else{
+                this->_ptr = this->stk.top();
+            }
         }
         return *this;
     }
@@ -69,9 +73,12 @@ namespace ariel{
         if(this->stk.empty()){
             this->_ptr = nullptr;
         }else{
-
             this->stk.pop();
-            this->_ptr = this->stk.top();
+            if(this->stk.empty()){
+                this->_ptr = nullptr;
+            }else{
+                this->_ptr = this->stk.top();
+            }
         }
         return itr;
     }
@@ -109,7 +116,7 @@ namespace ariel{
                 this->_ptr = this->stk.top();
             }
         }
-        return *this;
+        return itr;
     }
 
     OrgChart::Iterator_Level_Order OrgChart::begin(){
@@ -172,6 +179,9 @@ namespace ariel{
 
 
     std::ostream& operator<<(std::ostream& os, OrgChart& org){
+        if(org.root == nullptr){
+            throw "org is empty!!!";
+        }
         std::string str = "";
         os << OrgChart::helper(str, "", org.root);
         return os;

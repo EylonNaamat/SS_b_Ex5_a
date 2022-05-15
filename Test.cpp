@@ -167,6 +167,7 @@ TEST_CASE("iterators - good cases"){
     std::vector<std::string> vec_reverse{"YZ", "MNO", "PQR", "STU", "VWX", "ABC", "DEF", "GHI", "JKL", "HEADANDSHOULDERS", "CTO", "COO", "CEO"};
     std::vector<std::string> vec_pre{"CEO", "HEADANDSHOULDERS", "CTO", "ABC", "MNO", "YZ", "PQR", "DEF", "STU", "VWX", "COO", "GHI", "JKL"};
 
+
     int i = 0;
     for(auto element : org2){
         CHECK(element == vec_level[(uint)i]);
@@ -178,12 +179,27 @@ TEST_CASE("iterators - good cases"){
         ++i;
     }
     i = 0;
+    for(auto itr = org2.begin_level_order(); itr != OrgChart::end_level_order(); itr++){
+        CHECK((*itr) == vec_level[(uint)i]);
+        ++i;
+    }
+    i = 0;
     for(auto itr = org2.begin_reverse_order(); itr != OrgChart::end_reverse_order(); ++itr){
         CHECK((*itr) == vec_reverse[(uint)i]);
         ++i;
     }
     i = 0;
+    for(auto itr = org2.begin_reverse_order(); itr != OrgChart::end_reverse_order(); itr++){
+        CHECK((*itr) == vec_reverse[(uint)i]);
+        ++i;
+    }
+    i = 0;
     for(auto itr = org2.begin_preorder(); itr != OrgChart::end_preorder(); ++itr){
+        CHECK((*itr) == vec_pre[(uint)i]);
+        ++i;
+    }
+    i = 0;
+    for(auto itr = org2.begin_preorder(); itr != OrgChart::end_preorder(); itr++){
         CHECK((*itr) == vec_pre[(uint)i]);
         ++i;
     }
