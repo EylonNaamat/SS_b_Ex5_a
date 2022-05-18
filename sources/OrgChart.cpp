@@ -5,10 +5,17 @@
 
 namespace ariel{
 
+    /*
+     * implementation of * operator
+     * return the nodes name
+     */
     std::string&  OrgChart::Iterator::operator*(){
         return this->_ptr->name;
     }
 
+    /*
+     * implementation of != operator if the pointers arent the same return true, else false
+     */
     bool OrgChart::Iterator::operator!=(const Iterator& itr){
         bool ans = false;
         if(this->_ptr != itr._ptr){
@@ -17,14 +24,29 @@ namespace ariel{
         return ans;
     }
 
+    /**
+     * this function implements the -> operator, return the address of the nodes name
+     * @return
+     */
     std::string* OrgChart::Iterator::operator->(){
         return &(this->_ptr->name);
     }
 
+    /**
+     * this function is a getter for the pointer in Iterator
+     * @return
+     */
     OrgChart::Node* OrgChart::Iterator::get_ptr(){
         return this->_ptr;
     }
 
+    /**
+     * this function if the prefix++
+     * in this function we first check if the q is empty, if so the pointer is nullptr
+     * else, we pop the queue and check if now the queue is empty, if so the pointer is nullptr
+     * else, the pointer is the first element in the queue
+     * @return
+     */
     OrgChart::Iterator_Level_Order& OrgChart::Iterator_Level_Order::operator++(){
         if(this->q.empty()){
             this->_ptr = nullptr;
@@ -39,6 +61,15 @@ namespace ariel{
         return *this;
     }
 
+    /**
+     * his function if the postfix++
+     * first we save the iterator
+     * in this function we first check if the q is empty, if so the pointer is nullptr
+     * else, we pop the queue and check if now the queue is empty, if so the pointer is nullptr
+     * else, the pointer is the first element in the queue
+     * and return the iterator we saved
+     * @return
+     */
     OrgChart::Iterator_Level_Order OrgChart::Iterator_Level_Order::operator++(int){
         OrgChart::Iterator_Level_Order itr = *this;
         if(this->q.empty()){
@@ -54,6 +85,13 @@ namespace ariel{
         return itr;
     }
 
+    /**
+     * his function if the prefix++
+     * in this function we first check if the stack is empty, if so the pointer is nullptr
+     * else, we pop the queue and check if now the stack is empty, if so the pointer is nullptr
+     * else, the pointer is the first element in the stack
+     * @return
+     */
     OrgChart::Iterator_Reverse_Level_Order& OrgChart::Iterator_Reverse_Level_Order::operator++(){
         if(this->stk.empty()){
             this->_ptr = nullptr;
@@ -68,6 +106,15 @@ namespace ariel{
         return *this;
     }
 
+    /**
+     * his function if the postfix++
+     * first we save the iterator
+     * in this function we first check if the stack is empty, if so the pointer is nullptr
+     * else, we pop the queue and check if now the stack is empty, if so the pointer is nullptr
+     * else, the pointer is the first element in the stack
+     * and return the iterator we saved
+     * @return
+     */
     OrgChart::Iterator_Reverse_Level_Order OrgChart::Iterator_Reverse_Level_Order::operator++(int){
         OrgChart::Iterator_Reverse_Level_Order itr = *this;
         if(this->stk.empty()){
@@ -83,6 +130,15 @@ namespace ariel{
         return itr;
     }
 
+    /**
+     * this is the prefix++
+     * in this function we first check if the stack is empty if so, the pointer is nullptr
+     * else, we save the top of the sack and then pop the stack
+     * we go through all the child of the top of the stack from right to left, and insert the child to the stack
+     * if the stack is empty it means there are no child so the pointer is nullptr
+     * else, the pointer is the top of the stack
+     * @return
+     */
     OrgChart::Iterator_Preorder& OrgChart::Iterator_Preorder::operator++(){
         if(this->stk.empty()){
             this->_ptr = nullptr;
@@ -100,6 +156,18 @@ namespace ariel{
         }
         return *this;
     }
+
+    /**
+     * this is the postfix++
+     * first we save the iterator
+     * in this function we first check if the stack is empty if so, the pointer is nullptr
+     * else, we save the top of the sack and then pop the stack
+     * we go through all the child of the top of the stack from right to left, and insert the child to the stack
+     * if the stack is empty it means there are no child so the pointer is nullptr
+     * else, the pointer is the top of the stack
+     * and return the iterator we saved
+     * @return
+     */
     OrgChart::Iterator_Preorder OrgChart::Iterator_Preorder::operator++(int){
         OrgChart::Iterator_Preorder itr = *this;
         if(stk.empty()){
@@ -119,38 +187,78 @@ namespace ariel{
         return itr;
     }
 
+    /**
+     * this function tells the iterator where to begin, we send root to level order iterator
+     * @return
+     */
     OrgChart::Iterator_Level_Order OrgChart::begin(){
         return OrgChart::Iterator_Level_Order(this->root);
     }
 
+    /**
+     * this function tells the iterator where to stop, we send nullptr to level order iterator
+     * @return
+     */
     OrgChart::Iterator_Level_Order OrgChart::end(){
         return OrgChart::Iterator_Level_Order(nullptr);
     }
 
+    /**
+     * this function tells the iterator where to begin, we send root to level order iterator
+     * @return
+     */
     OrgChart::Iterator_Level_Order OrgChart::begin_level_order(){
         return OrgChart::Iterator_Level_Order(this->root);
     }
 
+    /**
+     * this function tells the iterator where to stop, we send nullptr to level order iterator
+     * @return
+     */
     OrgChart::Iterator_Level_Order OrgChart::end_level_order(){
         return OrgChart::Iterator_Level_Order(nullptr);
     }
 
+    /**
+     * this function tells the iterator where to begin, we send root to reverse level order iterator
+     * @return
+     */
     OrgChart::Iterator_Reverse_Level_Order OrgChart::begin_reverse_order(){
         return OrgChart::Iterator_Reverse_Level_Order(this->root);
     }
 
+    /**
+     * this function tells the iterator where to stop, we send nullptr to reverse level order iterator
+     * @return
+     */
     OrgChart::Iterator_Reverse_Level_Order OrgChart::end_reverse_order(){
         return OrgChart::Iterator_Reverse_Level_Order(nullptr);
     }
 
+    /**
+     * this function tells the iterator where to begin, we send root to preorder iterator
+     * @return
+     */
     OrgChart::Iterator_Preorder OrgChart::begin_preorder(){
         return OrgChart::Iterator_Preorder(this->root);
     }
 
+    /**
+     * this function tells the iterator where to stop, we send nullptr to preorder iterator
+     * @return
+     */
     OrgChart::Iterator_Preorder OrgChart::end_preorder(){
         return OrgChart::Iterator_Preorder(nullptr);
     }
 
+    /**
+     * this function adds a root to the organization
+     * if the root is nullptr it means that the organization is empty, so we create a new node with the name we got
+     * and sets him as the root
+     * else, the organization isnt empty so we replace the name of the root
+     * @param name
+     * @return
+     */
     OrgChart& OrgChart::add_root(const std::string& name){
         if(this->root != nullptr){
             this->root->name = name;
@@ -160,7 +268,15 @@ namespace ariel{
         return *this;
     }
 
-
+    /**
+     * this function adds a child to a node
+     * first we search for the father in the organization
+     * if we didnt find him we throw exception
+     * else, we create a new node with the name we got and add him to the father vector
+     * @param father
+     * @param name
+     * @return
+     */
     OrgChart& OrgChart::add_sub(const std::string& father, const std::string& name){
         OrgChart::Node* tmp = nullptr;
         for(auto itr = this->begin(); itr != OrgChart::end(); ++itr){
@@ -178,6 +294,13 @@ namespace ariel{
     }
 
 
+    /**
+     * this function implements the << operator
+     * we use a helper function and return os
+     * @param os
+     * @param org
+     * @return
+     */
     std::ostream& operator<<(std::ostream& os, OrgChart& org){
         if(org.root == nullptr){
             throw "org is empty!!!";
@@ -187,6 +310,23 @@ namespace ariel{
         return os;
     }
 
+    /**
+     * this is a helper function to the << operator
+     * we go recursively on the organization and add the names to a string
+     * in the next format:
+     * root
+     *      -child1
+     *      -child1
+     *              -child2
+     *              -child2
+     *      -child1
+     * all the children are printed from left to right and with a tab before
+     * at the end we return the string we created and send it to os
+     * @param str
+     * @param prefix
+     * @param node
+     * @return
+     */
     std::string& OrgChart::helper(std::string& str, std::string prefix, OrgChart::Node* node){
         str += prefix;
         if(str.size() != 0){

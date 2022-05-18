@@ -11,15 +11,18 @@
 namespace ariel{
     class OrgChart{
     public:
+        /* defining a node struct that has a name and a vector of his "childs" */
         struct Node{
             std::string name;
             std::vector<Node*> subs;
             Node(const std::string& name): name(name){}
         };
     private:
+        /* a pointer to the root of the organization */
         Node* root = nullptr;
 
     public:
+        /* constructor sets the root to be nullptr */
         OrgChart(){
             this->root = nullptr;
         }
@@ -76,6 +79,7 @@ namespace ariel{
 //            }
 //        }
 
+        /* iterator class which all the 3 iterators will inherit from */
         class Iterator{
             public:
                 Node* _ptr;
@@ -86,11 +90,18 @@ namespace ariel{
         };
 
         /* level order iterator */
+        /* this iterator inherits from Iterator and has a queue which orders all the nodes in the organization in level order */
         class Iterator_Level_Order : public Iterator{
             private:
                 std::queue<Node*> q_tmp;
                 std::queue<Node*> q;
             public:
+                /* the constructor gets a pointer to a node and fills the queue in the level order */
+                /*
+                 * this constructor gets a pointer to node and enters him into a queue
+                 * as long as the queue isnt empty, we take out the first element, inset him into another queue,
+                 * and then inserting all his child into the first queue
+                 */
                 Iterator_Level_Order(Node* ptr): Iterator(){
                     if(!this->q_tmp.empty()){
                         while(!this->q_tmp.empty()){
@@ -117,11 +128,18 @@ namespace ariel{
         };
 
         /* reverse level order iterator */
+        /* this iterator inherits from Iterator and has a stack which orders all the nodes in the organization in reverse level order */
         class Iterator_Reverse_Level_Order: public Iterator{
             private:
                 std::queue<Node*> q;
                 std::stack<Node*> stk;
             public:
+                /*
+                 * this constructor gets a pointer to node and fills the stack in reverse level order.
+                 * in this constructor we use a queue like level order but in this time we insert the childs of a node
+                 * from right to left into the queue.
+                 * in order to make this a reverse level order each iteration we pop the queue we insert the node to a stack
+                 */
                 Iterator_Reverse_Level_Order(Node* ptr): Iterator(){
                     if(!this->q.empty()){
                         while(!this->q.empty()){
@@ -156,10 +174,15 @@ namespace ariel{
         };
 
         /* preorder iterator */
+        /* this iterator inherits from Iterator and has a stack which orders all the nodes in the organization in preorder */
         class Iterator_Preorder: public Iterator{
             private :
                 std::stack<Node*> stk;
             public:
+                /*
+                 * this constructor gets a pointer to node and enter him into a stack, in this iterator,
+                 * we change the stack when we do ++
+                 */
                 Iterator_Preorder(Node* ptr): Iterator(){
                     if(!this->stk.empty()){
                         while(!this->stk.empty()){
@@ -193,7 +216,6 @@ namespace ariel{
         /* preorder iterator begin and end */
         Iterator_Preorder begin_preorder();
         static Iterator_Preorder end_preorder();
-
 
         OrgChart& add_root(const std::string& name);
         OrgChart& add_sub(const std::string& father, const std::string& name);
