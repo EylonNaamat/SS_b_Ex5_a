@@ -1,7 +1,7 @@
 //
 // Created by eylon on 5/21/22.
 //
-#include "OrgChart.hpp"
+#include "sources/OrgChart.hpp"
 #include <iostream>
 using namespace ariel;
 
@@ -86,12 +86,12 @@ int main(){
                         std::cout << "Father Dont Exist" << std::endl;
                     }
                 }else if(command == "*"){
-                    for(auto itr = org.begin_level_order(); itr != OrgChart::end_level_order(); ++itr){
+                    for(auto itr = org.begin_level_order(); itr != org.end_level_order(); ++itr){
                         std::cout << (*itr) << " ";
                     }
                     std::cout << std::endl;
                 }else if(command == "->"){
-                    for(auto itr = org.begin_level_order(); itr != OrgChart::end_level_order(); ++itr){
+                    for(auto itr = org.begin_level_order(); itr != org.end_level_order(); ++itr){
                         std::cout << itr->size() << " ";
                     }
                     std::cout << std::endl;
@@ -134,12 +134,12 @@ int main(){
                         std::cout << "Father Dont Exist" << std::endl;
                     }
                 }else if(command == "*"){
-                    for(auto itr = org.begin_reverse_order(); itr != OrgChart::end_reverse_order(); ++itr){
+                    for(auto itr = org.begin_reverse_order(); itr != org.reverse_order(); ++itr){
                         std::cout << (*itr) << " ";
                     }
                     std::cout << std::endl;
                 }else if(command == "->"){
-                    for(auto itr = org.begin_reverse_order(); itr != OrgChart::end_reverse_order(); ++itr){
+                    for(auto itr = org.begin_reverse_order(); itr != org.reverse_order(); ++itr){
                         std::cout << itr->size() <<" ";
                     }
                     std::cout << std::endl;
@@ -182,12 +182,12 @@ int main(){
                         std::cout << "Father Dont Exist" << std::endl;
                     }
                 }else if(command == "*"){
-                    for(auto itr = org.begin_preorder(); itr != OrgChart::end_preorder(); ++itr){
+                    for(auto itr = org.begin_preorder(); itr != org.end_preorder(); ++itr){
                         std::cout << (*itr) << " ";
                     }
                     std::cout << std::endl;
                 }else if(command == "->"){
-                    for(auto itr = org.begin_preorder(); itr != OrgChart::end_preorder(); ++itr){
+                    for(auto itr = org.begin_preorder(); itr != org.end_preorder(); ++itr){
                         std::cout << itr->size() << " ";
                     }
                     std::cout << std::endl;

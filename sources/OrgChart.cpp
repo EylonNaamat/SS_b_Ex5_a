@@ -9,14 +9,14 @@ namespace ariel{
      * implementation of * operator
      * return the nodes name
      */
-    std::string&  OrgChart::Iterator::operator*(){
+    std::string&  OrgChart::Iterator::operator*() const{
         return this->_ptr->name;
     }
 
     /*
      * implementation of != operator if the pointers arent the same return true, else false
      */
-    bool OrgChart::Iterator::operator!=(const Iterator& itr){
+    bool OrgChart::Iterator::operator!=(const Iterator& itr) const{
         bool ans = false;
         if(this->_ptr != itr._ptr){
             ans = true;
@@ -28,7 +28,7 @@ namespace ariel{
      * this function implements the -> operator, return the address of the nodes name
      * @return
      */
-    std::string* OrgChart::Iterator::operator->(){
+    std::string* OrgChart::Iterator::operator->() const{
         return &(this->_ptr->name);
     }
 
@@ -36,9 +36,13 @@ namespace ariel{
      * this function is a getter for the pointer in Iterator
      * @return
      */
-    OrgChart::Node* OrgChart::Iterator::get_ptr(){
+    OrgChart::Node* OrgChart::Iterator::get_ptr() const{
         return this->_ptr;
     }
+
+    /* ******************** */
+    /* Level_Order_Iterator */
+    /* ******************** */
 
     /**
      * this function if the prefix++
@@ -51,7 +55,11 @@ namespace ariel{
         if(this->q.empty()){
             this->_ptr = nullptr;
         }else{
+            Node* tmp = this->q.front();
             this->q.pop();
+            for(int i = 0; i < tmp->subs.size(); ++i){
+                this->q.push(tmp->subs[(uint)i]);
+            }
             if(this->q.empty()){
                 this->_ptr = nullptr;
             }else{
@@ -75,7 +83,11 @@ namespace ariel{
         if(this->q.empty()){
             this->_ptr = nullptr;
         }else{
+            Node* tmp = this->q.front();
             this->q.pop();
+            for(int i = 0; i < tmp->subs.size(); ++i){
+                this->q.push(tmp->subs[(uint)i]);
+            }
             if(this->q.empty()){
                 this->_ptr = nullptr;
             }else{
@@ -84,6 +96,10 @@ namespace ariel{
         }
         return itr;
     }
+
+    /* ********************** */
+    /* Reverse_Order_Iterator */
+    /* ********************** */
 
     /**
      * his function if the prefix++
@@ -129,6 +145,10 @@ namespace ariel{
         }
         return itr;
     }
+
+    /* ***************** */
+    /* PreOrder_Iterator */
+    /* ***************** */
 
     /**
      * this is the prefix++
@@ -187,11 +207,18 @@ namespace ariel{
         return itr;
     }
 
+    /* *********** */
+    /* Begin / End */
+    /* *********** */
+
     /**
      * this function tells the iterator where to begin, we send root to level order iterator
      * @return
      */
     OrgChart::Iterator_Level_Order OrgChart::begin(){
+        if(this->root == nullptr){
+            throw "nullptr";
+        }
         return OrgChart::Iterator_Level_Order(this->root);
     }
 
@@ -200,6 +227,9 @@ namespace ariel{
      * @return
      */
     OrgChart::Iterator_Level_Order OrgChart::end(){
+        if(this->root == nullptr){
+            throw "nullptr";
+        }
         return OrgChart::Iterator_Level_Order(nullptr);
     }
 
@@ -208,6 +238,9 @@ namespace ariel{
      * @return
      */
     OrgChart::Iterator_Level_Order OrgChart::begin_level_order(){
+        if(this->root == nullptr){
+            throw "nullptr";
+        }
         return OrgChart::Iterator_Level_Order(this->root);
     }
 
@@ -216,6 +249,9 @@ namespace ariel{
      * @return
      */
     OrgChart::Iterator_Level_Order OrgChart::end_level_order(){
+        if(this->root == nullptr){
+            throw "nullptr";
+        }
         return OrgChart::Iterator_Level_Order(nullptr);
     }
 
@@ -224,6 +260,9 @@ namespace ariel{
      * @return
      */
     OrgChart::Iterator_Reverse_Level_Order OrgChart::begin_reverse_order(){
+        if(this->root == nullptr){
+            throw "nullptr";
+        }
         return OrgChart::Iterator_Reverse_Level_Order(this->root);
     }
 
@@ -231,7 +270,10 @@ namespace ariel{
      * this function tells the iterator where to stop, we send nullptr to reverse level order iterator
      * @return
      */
-    OrgChart::Iterator_Reverse_Level_Order OrgChart::end_reverse_order(){
+    OrgChart::Iterator_Reverse_Level_Order OrgChart::reverse_order(){
+        if(this->root == nullptr){
+            throw "nullptr";
+        }
         return OrgChart::Iterator_Reverse_Level_Order(nullptr);
     }
 
@@ -240,6 +282,9 @@ namespace ariel{
      * @return
      */
     OrgChart::Iterator_Preorder OrgChart::begin_preorder(){
+        if(this->root == nullptr){
+            throw "nullptr";
+        }
         return OrgChart::Iterator_Preorder(this->root);
     }
 
@@ -248,8 +293,15 @@ namespace ariel{
      * @return
      */
     OrgChart::Iterator_Preorder OrgChart::end_preorder(){
+        if(this->root == nullptr){
+            throw "nullptr";
+        }
         return OrgChart::Iterator_Preorder(nullptr);
     }
+
+    /* ****************** */
+    /* OrgChart Functions */
+    /* ****************** */
 
     /**
      * this function adds a root to the organization
@@ -260,6 +312,9 @@ namespace ariel{
      * @return
      */
     OrgChart& OrgChart::add_root(const std::string& name){
+        if(name.empty() || name == "\n" || name == "\t" || name == "\r"){
+            throw "cant have empty name";
+        }
         if(this->root != nullptr){
             this->root->name = name;
         }else{
@@ -278,6 +333,9 @@ namespace ariel{
      * @return
      */
     OrgChart& OrgChart::add_sub(const std::string& father, const std::string& name){
+        if(name.empty() || name == "\n" || name == "\t" || name == "\r"){
+            throw "cant have empty name";
+        }
         OrgChart::Node* tmp = nullptr;
         for(auto itr = this->begin(); itr != OrgChart::end(); ++itr){
             if((*itr) == father){
@@ -305,7 +363,7 @@ namespace ariel{
         if(org.root == nullptr){
             throw "org is empty!!!";
         }
-        std::string str = "";
+        std::string str;
         os << OrgChart::helper(str, "", org.root);
         return os;
     }
@@ -327,15 +385,15 @@ namespace ariel{
      * @param node
      * @return
      */
-    std::string& OrgChart::helper(std::string& str, std::string prefix, OrgChart::Node* node){
+    std::string& OrgChart::helper(std::string& str, const std::string& prefix, OrgChart::Node* node){
         str += prefix;
-        if(str.size() != 0){
+        if(!str.empty()){
             str += "-";
         }
         str += node->name;
         str += "\n";
         for(int i = 0; i < node->subs.size(); ++i){
-             OrgChart::helper(str, prefix + "\t", node->subs[(uint)i]);
+            OrgChart::helper(str, prefix + "\t", node->subs[(uint)i]);
         }
         return str;
     }

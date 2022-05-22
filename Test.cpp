@@ -111,6 +111,19 @@ TEST_CASE("add_root, add_sub tests - bad cases"){
     //trying to add sub to non exist field
     CHECK_THROWS(org.add_sub("CTO", "COO"));
 
+    // checking the input
+    CHECK_THROWS(org.add_root(""));
+    CHECK_THROWS(org.add_sub("eylon", ""));
+
+    CHECK_THROWS(org.add_root("\n"));
+    CHECK_THROWS(org.add_sub("eylon", "\n"));
+
+    CHECK_THROWS(org.add_root("\r"));
+    CHECK_THROWS(org.add_sub("eylon", "\r"));
+
+    CHECK_THROWS(org.add_root("\t"));
+    CHECK_THROWS(org.add_sub("eylon", "\t"));
+
 }
 
 TEST_CASE("iterators - good cases"){
@@ -124,15 +137,15 @@ TEST_CASE("iterators - good cases"){
     org.add_sub("cs", "degree");
 
     std::vector<std::string> level_order;
-    for(auto itr_level = org.begin_level_order(); itr_level != OrgChart::end_level_order(); ++itr_level){
+    for(auto itr_level = org.begin_level_order(); itr_level != org.end_level_order(); ++itr_level){
         level_order.push_back((*itr_level));
     }
     std::vector<std::string> reverse_level_order;
-    for(auto itr_reverse = org.begin_reverse_order(); itr_reverse != OrgChart::end_reverse_order(); ++itr_reverse){
+    for(auto itr_reverse = org.begin_reverse_order(); itr_reverse != org.reverse_order(); ++itr_reverse){
         reverse_level_order.push_back((*itr_reverse));
     }
     std::vector<std::string> preorder;
-    for(auto itr_pre = org.begin_preorder(); itr_pre != OrgChart::end_preorder(); ++itr_pre){
+    for(auto itr_pre = org.begin_preorder(); itr_pre != org.end_preorder(); ++itr_pre){
         preorder.push_back((*itr_pre));
     }
 
@@ -174,37 +187,34 @@ TEST_CASE("iterators - good cases"){
         ++i;
     }
     i = 0;
-    for(auto itr = org2.begin_level_order(); itr != OrgChart::end_level_order(); ++itr){
+    for(auto itr = org2.begin_level_order(); itr != org2.end_level_order(); ++itr){
         CHECK((*itr) == vec_level[(uint)i]);
         ++i;
     }
     i = 0;
-    for(auto itr = org2.begin_level_order(); itr != OrgChart::end_level_order(); itr++){
+    for(auto itr = org2.begin_level_order(); itr != org2.end_level_order(); itr++){
         CHECK((*itr) == vec_level[(uint)i]);
         ++i;
     }
     i = 0;
-    for(auto itr = org2.begin_reverse_order(); itr != OrgChart::end_reverse_order(); ++itr){
+    for(auto itr = org2.begin_reverse_order(); itr != org2.reverse_order(); ++itr){
         CHECK((*itr) == vec_reverse[(uint)i]);
         ++i;
     }
     i = 0;
-    for(auto itr = org2.begin_reverse_order(); itr != OrgChart::end_reverse_order(); itr++){
+    for(auto itr = org2.begin_reverse_order(); itr != org2.reverse_order(); itr++){
         CHECK((*itr) == vec_reverse[(uint)i]);
         ++i;
     }
     i = 0;
-    for(auto itr = org2.begin_preorder(); itr != OrgChart::end_preorder(); ++itr){
+    for(auto itr = org2.begin_preorder(); itr != org2.end_preorder(); ++itr){
         CHECK((*itr) == vec_pre[(uint)i]);
         ++i;
     }
     i = 0;
-    for(auto itr = org2.begin_preorder(); itr != OrgChart::end_preorder(); itr++){
+    for(auto itr = org2.begin_preorder(); itr != org2.end_preorder(); itr++){
         CHECK((*itr) == vec_pre[(uint)i]);
         ++i;
     }
-
-
-
 
 }

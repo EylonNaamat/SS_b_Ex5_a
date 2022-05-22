@@ -36,7 +36,7 @@ int main() {
     {
         cout << (*it) << " " ;
     } // prints: CEO CTO CFO COO VP_SW VP_BI
-    for (auto it = organization.begin_reverse_order(); it != organization.end_reverse_order(); ++it)
+    for (auto it = organization.begin_reverse_order(); it != organization.reverse_order(); ++it)
     {
         cout << (*it) << " " ;
     } // prints: VP_SW VP_BI CTO CFO COO CEO
