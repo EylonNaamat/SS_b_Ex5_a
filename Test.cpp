@@ -18,6 +18,7 @@ TEST_CASE("add_root, add_sub tests - good cases"){
     org.add_sub("COO", "APP");
     org.add_sub("ASD", "ABC");
 
+    // checking if add_root, add_sub works, and also *
     auto itr = org.begin_level_order();
     CHECK((*itr) == "CEO");
     itr++;
@@ -78,7 +79,7 @@ TEST_CASE("add_root, add_sub tests - good cases"){
     CHECK((*itr2) == "ABC");
     itr2++;
 
-    // adding sub to org and check if add
+    // adding sub to org and check if added
     org2.add_sub("ABC", "DEF");
     itr2 = org2.begin_level_order();
     CHECK((*itr2) == "CEO");
@@ -108,6 +109,7 @@ TEST_CASE("add_root, add_sub tests - bad cases"){
     CHECK_THROWS(org.add_sub("CEO", "CTO"));
 
     org.add_root("eylon");
+
     //trying to add sub to non exist field
     CHECK_THROWS(org.add_sub("CTO", "COO"));
 
@@ -126,9 +128,23 @@ TEST_CASE("add_root, add_sub tests - bad cases"){
 
 }
 
-TEST_CASE("iterators - good cases"){
-    // making an org like linkedlist, thus, preorder and level order should be the same, and reverse level order be like level order
+TEST_CASE("iterators"){
     OrgChart org;
+
+    // checking iterators when org is empty
+    CHECK_THROWS(org.begin());
+    CHECK_THROWS(org.end());
+
+    CHECK_THROWS(org.begin_level_order());
+    CHECK_THROWS(org.end_level_order());
+
+    CHECK_THROWS(org.begin_reverse_order());
+    CHECK_THROWS(org.reverse_order());
+
+    CHECK_THROWS(org.begin_preorder());
+    CHECK_THROWS(org.end_preorder());
+
+    // making an org like linkedlist, thus, preorder and level order should be the same, and reverse level order be like level order in reverse
     org.add_root("eylon");
     org.add_sub("eylon", "naamat");
     org.add_sub("naamat", "cpp");
